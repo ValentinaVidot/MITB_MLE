@@ -11,7 +11,7 @@ import pyspark
 import pyspark.sql.functions as F
 import argparse
 
-from pyspark.sql.functions import col
+from pyspark.sql.functions import col, regexp_replace, trim, coalesce, lit
 from pyspark.sql.types import StringType, IntegerType, FloatType, DateType
 
 
