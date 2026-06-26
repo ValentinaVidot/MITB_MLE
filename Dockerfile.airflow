@@ -1,0 +1,17 @@
+FROM apache/airflow:2.10.4-python3.12
+
+USER root
+
+# Install Java (required by PySpark — it needs a JVM to launch the Spark gateway)
+# and curl (already needed for healthchecks etc.)
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl default-jre-headless procps \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set JAVA_HOME so PySpark can find the JVM
+ENV JAVA_HOME=/usr/lib/jvm/default-java
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+COPY requirements-airflow.txt /requirements-airflow.txt
+
+RUN su airflow -c "pip install --no-cache-dir -r /requirements-airflow.txt"
