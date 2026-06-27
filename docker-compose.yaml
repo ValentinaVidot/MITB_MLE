@@ -43,19 +43,23 @@ services:
   airflow-webserver:
     image: a2_airflow:latest
     depends_on:
-      - airflow-init
+      airflow-init:
+        condition: service_completed_successfully
     container_name: A2_airflow_webserver
     hostname: airflow-webserver
     environment: *airflow-env
     volumes: *airflow-volumes
     ports:
       - "8080:8080"
-    command: webserver
+    entrypoint:
+      - /bin/bash
+      - /opt/airflow/scripts/start_airflow_webserver.sh
 
   airflow-scheduler:
     image: a2_airflow:latest
     depends_on:
-      - airflow-init
+      airflow-init:
+        condition: service_completed_successfully
     container_name: A2_airflow_scheduler
     hostname: airflow-scheduler
     environment: *airflow-env
